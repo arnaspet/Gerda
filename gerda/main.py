@@ -1,6 +1,5 @@
 import string
 import re
-import tkinter
 
 search_strings = ['Legend', 'Efsane']
 file_names = ['[NDS]Tomb_Raider_Legend[EUR]-[www.ESPALNDS.com].rar', '[PSP]Tomb.Raider.Legend.[EUR].rar']
@@ -24,17 +23,3 @@ for filename in file_names:
             top_words[word] = 1
 
 print(top_words)
-
-
-class Main(tkinter.Frame):
-    def __init__(self, master=None):
-        tkinter.Frame.__init__(self, master)
-        self.grid()
-        self.createWidgets()
-
-    def createWidgets(self):
-        self.quitButton = tkinter.Button(self, text='Quit', command=self.quit)
-        self.quitButton.grid()
-
-app = Main()
-app.mainloop()

@@ -1,0 +1,10 @@
+sudo: required
+language: python
+services:
+- docker
+before_install:
+- pip install pyinstaller
+- pyinstaller --onefile gerda/main.py
+- docker pull cdrx/pyinstaller-windows
+- docker run -v "$(pwd):/src/" cdrx/pyinstaller-windows
+- docker cp cdrx/pyinstaller-windows:/dist/gerda.exe

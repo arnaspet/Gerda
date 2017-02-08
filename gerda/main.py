@@ -1,10 +1,33 @@
 import string
 import re
+import csv
+import operator
+import sys
 
-search_strings = ['Legend', 'Efsane']
-file_names = ['[NDS]Tomb_Raider_Legend[EUR]-[www.ESPALNDS.com].rar', '[PSP]Tomb.Raider.Legend.[EUR].rar']
-hashes = ['DF8651E592919CA2D452DEC83A57FF39', 'E1760A046D8B334CB2A2F679F612F8EF']
-negatives = ['ESPALNDS']
+
+search_strings = []
+file_names = []
+hashes = []
+negatives = []
+
+result_file = open('result.csv', 'w')
+top_words_file = open('top_words.csv', 'w')
+result_file_writer = csv.writer(result_file)
+top_words_writer = csv.writer(top_words_file)
+
+with open(sys.argv[1], 'r') as csvfile:
+    spamreader = csv.reader(csvfile)
+    for row in spamreader:
+        hashes.append(row[0])
+        file_names.append(row[1])
+        if row[2] != '':
+            search_strings.append(row[2])
+
+with open('ignore.csv', 'r') as csvfile:
+    spamreader = csv.reader(csvfile)
+    for row in spamreader:
+        negatives.append(row[0])
+
 
 top_words = {}
 
@@ -14,7 +37,7 @@ for filename in file_names:
     words = filter(lambda x: x not in negatives + search_strings, words)
 
     if words:
-        print(filename + ' ' + hashes[file_names.index(filename)])
+        result_file_writer.writerow([filename + ' ' + hashes[file_names.index(filename)]])
 
     for word in words:
         if word in top_words:
@@ -22,4 +45,5 @@ for filename in file_names:
         else:
             top_words[word] = 1
 
-print(top_words)
+sorted_top_words = sorted(top_words.items(), key=operator.itemgetter(1), reverse=True)
+top_words_writer.writerows(sorted_top_words)

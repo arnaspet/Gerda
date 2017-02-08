@@ -10,12 +10,12 @@ file_names = []
 hashes = []
 negatives = []
 
-result_file = open('result.csv', 'w')
-top_words_file = open('top_words.csv', 'w')
+result_file = open('result.csv', 'w', encoding="utf-8")
+top_words_file = open('top_words.csv', 'w', encoding="utf-8")
 result_file_writer = csv.writer(result_file)
 top_words_writer = csv.writer(top_words_file)
 
-with open(sys.argv[1], 'r') as csvfile:
+with open(sys.argv[1], 'r', encoding="utf-8") as csvfile:
     spamreader = csv.reader(csvfile)
     for row in spamreader:
         hashes.append(row[0])
@@ -23,7 +23,7 @@ with open(sys.argv[1], 'r') as csvfile:
         if row[2] != '':
             search_strings.append(row[2])
 
-with open('ignore.csv', 'r') as csvfile:
+with open('ignore.csv', 'r', encoding="utf-8") as csvfile:
     spamreader = csv.reader(csvfile)
     for row in spamreader:
         negatives.append(row[0])
@@ -34,7 +34,7 @@ top_words = {}
 for filename in file_names:
     words = re.split("[" + string.punctuation + "]+", filename)
     words = filter(lambda x: len(x) > 3, words)
-    words = filter(lambda x: x not in negatives + search_strings, words)
+    words = filter(lambda x: x.lower() not in negatives + search_strings, words)
 
     if words:
         result_file_writer.writerow([filename + ' ' + hashes[file_names.index(filename)]])
